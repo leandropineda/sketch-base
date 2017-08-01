@@ -6,7 +6,6 @@
 #include "../lib/catch.hpp"
 #include "../src/sketch.h"
 #include "../lib/utils.hpp"
-#include "../lib/pcap_parser.hpp"
 
 SCENARIO( "add random elements", "[sketch]" ) {
     uint MAX_N = 100000;
