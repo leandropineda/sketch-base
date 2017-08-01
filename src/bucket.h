@@ -9,9 +9,10 @@
 #include <iomanip>
 #include <map>
 #include <set>
-#include "key.h"
 #include "../lib/easylogging++.h"
+#include "../lib/utils.hpp"
 #include "../lib/typedefs.h"
+
 
 class bucket {
 private:

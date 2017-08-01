@@ -11,6 +11,8 @@
 #include <set>
 #include <utility>
 
+typedef uint key;
+
 class bucket;
 
 typedef std::pair<uint, uint> hash_func_t;

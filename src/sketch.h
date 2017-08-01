@@ -13,10 +13,8 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>    // std::max
-#include "key.h"
 #include "bucket.h"
 #include "../lib/easylogging++.h"
-#include "../lib/typedefs.h"
 
 class sketch {
     uint w, d, p;

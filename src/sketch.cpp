@@ -14,7 +14,7 @@ sketch::sketch(uint d, uint w, uint p, uint max_dict_length) : d(d), w(w), p(p),
     //   1 <= a <= p-1 and
     //   0 <= b <= p-1 are chosen randomly
     assert(this->p >= this->w); //universal hashing
-
+    assert(this->__isPrime(this->p));
     LOG(INFO) << "Sketch: buckets " << this->w << ", "
               << "hash functions " << this->d << ", "
               << "parameter p " << this->p;
@@ -43,10 +43,7 @@ uint sketch::__index(uint i, uint j) const {
 }
 
 uint sketch::__hashKey(uint a, uint b, key &k) {
-    return (((a*k.src_ip + b) % this->p) % this->w +
-            ((a*k.src_port + b) % this->p) % this->w ) % this->w;
-            //((a*k.dst_ip + b) % this->p)  % this->w +
-            //((a*k.dst_port + b) % this->p) % this->w) % this->w;
+    return ((a*k + b) % this->p) % this->w;
 }
 
 void sketch::__buildHashFunc() {
@@ -83,6 +80,14 @@ std::ostream &operator<<(std::ostream &os, const sketch &sk) {
 }
 
 bool sketch::__isPrime(uint n) const {
+    if (n <= 1) return false;
+    else if (n <= 3) return true;
+        else if ((n % 2) == 0 or (n % 3) == 0) return false;
+    uint i = 5;
+    while (i * i <= n) {
+        if (n % i == 0 or n % (i + 2) == 0) return false;
+        i = i + 6;
+    }
     return true;
 }
 

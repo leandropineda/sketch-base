@@ -43,6 +43,8 @@ int main( int argc, const char* const argv[] )
     // default logger uses default configurations
     el::Loggers::reconfigureLogger("default", defaultConf);
 
+    // random seed for all sources
+    srand(time(NULL));
 
     //If the TEST macro is defined to be true,
     //runCatchTests will be called and immediately

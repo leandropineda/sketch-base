@@ -26,13 +26,16 @@ void bucket::addElement(key &e) {
         } else {
             uint d_err;
             ((value < this->getEventCounterMinValue()) ? d_err = value : d_err = this->getEventCounterMinValue());
+            //LOG(DEBUG) << "ERR " << d_err;
             this->err += d_err;
             //LOG(DEBUG) << "Decreasing all elements on event_counter";
-            for (event_counter_t::iterator it = event_counter->begin(); it != event_counter->end(); it++) {
+            event_counter_t::iterator it = event_counter->begin();
+            while (it != event_counter->end()){
                 event_counter->at(it->first) = event_counter->at(it->first) - d_err;
                 if (event_counter->at(it->first) <= 0) {
-                    event_counter->erase(it);
-                }
+                    //LOG(DEBUG) << "Erasing " << it->first;
+                    it = event_counter->erase(it);
+                } else ++it;
             }
         }
     }
@@ -44,7 +47,8 @@ std::ostream &operator<<(std::ostream &os, const bucket &__eventcounter) {
        << " E:" << std::setw(4) << __eventcounter.err << std::setw(4)
        << " - "<< __eventcounter.getKeySet().size() << " key(s): ";
     event_counter_t::iterator it;
-    for (it = __eventcounter.event_counter->begin(); it != __eventcounter.event_counter->end(); it++) {
+    for (it = __eventcounter.event_counter->begin();
+         it != __eventcounter.event_counter->end(); it++) {
         os << it->first << ":" << it->second << " ";
     }
     return os;
@@ -52,7 +56,8 @@ std::ostream &operator<<(std::ostream &os, const bucket &__eventcounter) {
 
 uint bucket::getEventCounterMinValue() {
     uint min = UINT32_MAX;
-    for (event_counter_t::iterator it = this->event_counter->begin(); it != this->event_counter->end(); it++) {
+    for (event_counter_t::iterator it = this->event_counter->begin();
+         it != this->event_counter->end(); it++) {
         if (it->second < min) min = it->second;
     }
     return min;
@@ -75,7 +80,8 @@ estimation_t bucket::estimateElementFrequency(key &e) {
 
 key_set_t bucket::getKeySet() const {
     key_set_t key_set;
-    for (event_counter_t::iterator it = this->event_counter->begin(); it != this->event_counter->end(); it++) {
+    for (event_counter_t::iterator it = this->event_counter->begin();
+         it != this->event_counter->end(); it++) {
         key_set.insert(it->first);
     }
     return key_set;
