@@ -40,6 +40,8 @@ int main( int argc, const char* const argv[] )
     // Values are always std::string
     defaultConf.set(el::Level::Debug,
                     el::ConfigurationType::Format, "%datetime %level %msg");
+    defaultConf.set(el::Level::Info,
+                    el::ConfigurationType::Format, "%datetime %level %msg");
     // default logger uses default configurations
     el::Loggers::reconfigureLogger("default", defaultConf);
 

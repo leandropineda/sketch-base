@@ -142,7 +142,12 @@ key_set_t sketch::getHeavyHitters(uint threshold) {
             }
         }
     }
+    std::string log_msg = "";
+    for (key_set_t::iterator it = key_set.begin(); it != key_set.end(); it++) {
+        log_msg += std::to_string(*it) + " ";
+    }
 
+    LOG(DEBUG) << "Found " << key_set.size() << " heavy keys: " << log_msg;
     return key_set;
 }
 
@@ -186,6 +191,7 @@ void sketch::clear() {
 void sketch::__allocSketch() {
     // allocate the sketch on memory
     // bucket default constructor must initialize empty buckets
+    LOG(DEBUG) << "Allocating sketch";
     this->matrix = new bucket_list_t;
     for (uint i = 0; i < (w*d); i++) {
         this->matrix->push_back(bucket(max_dict_length));
