@@ -164,9 +164,9 @@ install:
 before_script:
   - export CXX=${COMPILER}
   - cd ${TRAVIS_BUILD_DIR}
-  - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -Wdev -DUSE_CPP11=${CPP11} -DUSE_CPP14=${CPP14}
+  - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -Wdev
   - cd Build
 
 script:
   - make -j 2
-  - sketch -- -j 6
+  - ./sketch -- -j 6
