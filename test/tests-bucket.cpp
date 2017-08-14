@@ -9,9 +9,9 @@
 
 
 SCENARIO( "add the same element multiple times to a bucket big enough" , "[bucket]") {
-    uint MAX_N = 100000;
-    uint n_elem = rand() % MAX_N;
-    uint max_keys = rand() % (uint) 10 + 1;
+    uint32_t MAX_N = 100000;
+    uint32_t n_elem = rand() % MAX_N;
+    uint32_t max_keys = rand() % (uint32_t) 10 + 1;
     GIVEN ("A bucket of length " + std::to_string(max_keys)) {
         bucket b(max_keys);
         WHEN ("a random key is created") {
@@ -30,9 +30,9 @@ SCENARIO( "add the same element multiple times to a bucket big enough" , "[bucke
 }
 
 SCENARIO( "add multiple elements multiple times to a bucket just big enough" , "[bucket]") {
-    uint MAX_N = 100000;
-    uint n_elem = rand() % MAX_N;
-    uint max_keys = rand() % (uint) 10 + 2;
+    uint32_t MAX_N = 100000;
+    uint32_t n_elem = rand() % MAX_N;
+    uint32_t max_keys = rand() % (uint32_t) 10 + 2;
     GIVEN ("A bucket of length " + std::to_string(max_keys)) {
         bucket b(max_keys);
         WHEN ("a set of " + std::to_string(max_keys) + " random keys is created") {
@@ -60,10 +60,10 @@ SCENARIO( "add multiple elements multiple times to a bucket just big enough" , "
 }
 
 SCENARIO( "add multiple elements multiple times on a small bucket", "[bucket]") {
-    uint MAX_N = 100000;
-    uint max_keys = rand() % (uint) 10 + 20;
-    uint n_elem = (rand() % MAX_N);
-    uint extra_keys = rand() % (uint) 10 + 1;
+    uint32_t MAX_N = 100000;
+    uint32_t max_keys = rand() % (uint32_t) 10 + 20;
+    uint32_t n_elem = (rand() % MAX_N);
+    uint32_t extra_keys = rand() % (uint32_t) 10 + 1;
     GIVEN ("A bucket of length " + std::to_string(max_keys)) {
         bucket b(max_keys);
         WHEN ("a set of " + std::to_string(max_keys) + " random keys is created") {
@@ -71,7 +71,7 @@ SCENARIO( "add multiple elements multiple times on a small bucket", "[bucket]") 
             while (keys.size() < max_keys + extra_keys) keys.insert(getRandomKey());
             AND_WHEN(std::to_string(n_elem) + " of each element is added to the bucket") {
                 for (std::set<key>::iterator it = keys.begin(); it != keys.end(); it++) {
-                    for (uint i = 0; i < n_elem; i++) {
+                    for (uint32_t i = 0; i < n_elem; i++) {
                         key _k = *it;
                         b.addElement(_k);
                     }
@@ -88,24 +88,24 @@ SCENARIO( "add multiple elements multiple times on a small bucket", "[bucket]") 
 }
 
 SCENARIO( "estimate the frequency of an element", "[bucket]") {
-    uint MAX_N = 100000;
-    uint max_keys = rand() % (uint) 20 + 5;
-    uint n_elem = (rand() % MAX_N) + MAX_N;
-    uint extra_keys = 10;
+    uint32_t MAX_N = 100000;
+    uint32_t max_keys = rand() % (uint32_t) 20 + 5;
+    uint32_t n_elem = (rand() % MAX_N) + MAX_N;
+    uint32_t extra_keys = 10;
     GIVEN("a bucket of length " + std::to_string(max_keys)) {
         bucket b(max_keys);
         WHEN("keys between 0 and " + std::to_string(max_keys + extra_keys) +
              " are generated with binomial distribution (stddev 0.5)") {
             std::default_random_engine generator;
             std::binomial_distribution<key> distribution(max_keys + extra_keys, 0.5);
-            std::map<key, uint> p;
+            std::map<key, uint32_t> p;
             AND_WHEN(std::to_string(n_elem) + " are inserted into the bucket") {
                 for (int i = 0; i < n_elem; ++i) {
                     key k = distribution(generator);
                     b.addElement(k);
                     ++p[k];
                 }
-                key mean_key = uint((max_keys + extra_keys) / 2);
+                key mean_key = uint32_t((max_keys + extra_keys) / 2);
                 THEN("the frequency for the mean key " + std::to_string(mean_key) + " is " +
                      std::to_string(p[mean_key])) {
                     estimation_t f = b.estimateElementFrequency(mean_key);

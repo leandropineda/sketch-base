@@ -8,14 +8,14 @@
 #include "../lib/utils.hpp"
 
 SCENARIO( "add random elements", "[sketch]" ) {
-    uint MAX_N = 100000;
-    uint n_elem = (rand() % MAX_N);
+    uint32_t MAX_N = 100000;
+    uint32_t n_elem = (rand() % MAX_N);
 
-    uint rows = 5, cols = 10, p = 7919;
+    uint32_t rows = 5, cols = 10, p = 7919;
     GIVEN ("a sketch of " + std::to_string(rows) + " rows " + std::to_string(cols) + " cols. Prime is " + std::to_string(p));
     sketch sk(rows, cols, p);
     WHEN (std::to_string(n_elem) + " element are added") {
-        for (uint i = 0; i < n_elem; i++) {
+        for (uint32_t i = 0; i < n_elem; i++) {
             key k = getRandomKey();
             sk.addElement(k);
         }
@@ -26,10 +26,10 @@ SCENARIO( "add random elements", "[sketch]" ) {
 }
 
 SCENARIO( "get heavy hitters", "[sketch]" ) {
-    uint MAX_N = 1000000;
-    uint n_elem = (rand() % MAX_N) + MAX_N;
-    uint max_keys = rand() % (uint) 10000 + 1000;
-    uint rows = 5, cols = 1000, p = 7919;
+    uint32_t MAX_N = 1000000;
+    uint32_t n_elem = (rand() % MAX_N) + MAX_N;
+    uint32_t max_keys = rand() % (uint32_t) 10000 + 1000;
+    uint32_t rows = 5, cols = 1000, p = 7919;
     GIVEN ("a sketch of " + std::to_string(rows) + " rows, " + std::to_string(cols) + " cols and a prime number p=" + std::to_string(p)) {
         sketch sk(rows, cols, p);
         WHEN(std::to_string(n_elem) + " keys between 0 and " + std::to_string(max_keys) +
@@ -37,8 +37,8 @@ SCENARIO( "get heavy hitters", "[sketch]" ) {
             std::default_random_engine generator;
             std::binomial_distribution<key> distribution(max_keys, 0.5);
 
-            std::map<key, uint> m;
-            for (uint i = 0; i < n_elem; i++) {
+            std::map<key, uint32_t> m;
+            for (uint32_t i = 0; i < n_elem; i++) {
                 key k = distribution(generator);
                 sk.addElement(k);
                 ++m[k];
