@@ -7,7 +7,7 @@
 
 #include "typedefs.h"
 
-inline key getRandomKey(uint max = UINT32_MAX) {
+inline key getRandomKey(uint32_t max = UINT32_MAX) {
     return rand() % max;
 }
 

@@ -16,15 +16,15 @@
 
 class bucket {
 private:
-    uint V, err;
+    uint32_t V, err;
     event_counter_t *event_counter;
-    uint max_length;
+    uint32_t max_length;
 public:
-    bucket(uint max_length);
+    bucket(uint32_t max_length);
 
     void addElement(key &e);
-    uint getEventCounterMinValue();
-    uint getCounterValue() const;
+    uint32_t getEventCounterMinValue();
+    uint32_t getCounterValue() const;
     estimation_t estimateElementFrequency(key &e);
     key_set_t getKeySet() const;
 

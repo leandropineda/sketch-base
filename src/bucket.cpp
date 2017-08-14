@@ -4,7 +4,7 @@
 
 #include "bucket.h"
 
-bucket::bucket(uint max_length) {
+bucket::bucket(uint32_t max_length) {
     this->V = 0;
     this->err = 0;
     this->max_length = max_length;
@@ -13,7 +13,7 @@ bucket::bucket(uint max_length) {
 
 // this function implements FREQUENT counter-based algorithm
 void bucket::addElement(key &e) {
-    uint value = 1;
+    uint32_t value = 1;
     this->V += value;
     //LOG(DEBUG) << "Adding e " << e;
     // if the e exists on the map
@@ -24,7 +24,7 @@ void bucket::addElement(key &e) {
             // event_counter is not full and key is not in event_counter
             event_counter->insert(event_pair_t(e, value));
         } else {
-            uint d_err;
+            uint32_t d_err;
             ((value < this->getEventCounterMinValue()) ? d_err = value : d_err = this->getEventCounterMinValue());
             //LOG(DEBUG) << "ERR " << d_err;
             this->err += d_err;
@@ -54,8 +54,8 @@ std::ostream &operator<<(std::ostream &os, const bucket &__eventcounter) {
     return os;
 }
 
-uint bucket::getEventCounterMinValue() {
-    uint min = UINT32_MAX;
+uint32_t bucket::getEventCounterMinValue() {
+    uint32_t min = UINT32_MAX;
     for (event_counter_t::iterator it = this->event_counter->begin();
          it != this->event_counter->end(); it++) {
         if (it->second < min) min = it->second;
@@ -63,7 +63,7 @@ uint bucket::getEventCounterMinValue() {
     return min;
 }
 
-uint bucket::getCounterValue() const {
+uint32_t bucket::getCounterValue() const {
     return this->V;
 }
 

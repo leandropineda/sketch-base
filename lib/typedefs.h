@@ -11,14 +11,14 @@
 #include <set>
 #include <utility>
 
-typedef uint key;
+typedef uint32_t key;
 
 class bucket;
 
-typedef std::pair<uint, uint> hash_func_t;
-typedef std::pair<key,uint> event_pair_t;
-typedef std::pair<uint,uint> estimation_t;
-typedef std::map<key,uint> event_counter_t;
+typedef std::pair<uint32_t, uint32_t> hash_func_t;
+typedef std::pair<key,uint32_t> event_pair_t;
+typedef std::pair<uint32_t,uint32_t> estimation_t;
+typedef std::map<key,uint32_t> event_counter_t;
 typedef std::set<key> key_set_t;
 typedef std::set<key> key_set_t;
 typedef std::vector<bucket> bucket_list_t;

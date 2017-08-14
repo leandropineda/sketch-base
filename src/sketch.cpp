@@ -4,7 +4,7 @@
 
 #include "sketch.h"
 
-sketch::sketch(uint d, uint w, uint p, uint max_dict_length) : d(d), w(w), p(p), max_dict_length(max_dict_length) {
+sketch::sketch(uint32_t d, uint32_t w, uint32_t p, uint32_t max_dict_length) : d(d), w(w), p(p), max_dict_length(max_dict_length) {
     srand(time(NULL));
     // hash functions are defined as
     //   h_ab(key) = ((a * key + b) mod p) mod w
@@ -31,18 +31,18 @@ sketch::sketch(uint d, uint w, uint p, uint max_dict_length) : d(d), w(w), p(p),
 void sketch::addElement(key &k) {
     assert (this->hash_func.size());
     //LOG(DEBUG) << "Adding element " << k << " to sketch";
-    for (uint i = 0; i < this->d; i++) {
-        uint col = this->__hashKey(this->hash_func[i].first, this->hash_func[i].second, k);
+    for (uint32_t i = 0; i < this->d; i++) {
+        uint32_t col = this->__hashKey(this->hash_func[i].first, this->hash_func[i].second, k);
         this->matrix->at(this->__index(i, col)).addElement(k);
         //LOG(DEBUG) << "Hashing to " << i << ", " << col << ". Element " << this->matrix->at(this->__index(i, col));
     }
 }
 
-uint sketch::__index(uint i, uint j) const {
+uint32_t sketch::__index(uint32_t i, uint32_t j) const {
     return (i*w)+j;
 }
 
-uint sketch::__hashKey(uint a, uint b, key &k) {
+uint32_t sketch::__hashKey(uint32_t a, uint32_t b, key &k) {
     return ((a*k + b) % this->p) % this->w;
 }
 
@@ -71,7 +71,7 @@ void sketch::__buildHashFunc() {
 }
 
 std::ostream &operator<<(std::ostream &os, const sketch &sk) {
-    for (uint i = 0; i < (sk.d*sk.w); i++) {
+    for (uint32_t i = 0; i < (sk.d*sk.w); i++) {
             os << std::setw(2) << "E: " + std::to_string(i) + " "
                << sk.matrix->at(i) << std::endl;
         }
@@ -79,11 +79,11 @@ std::ostream &operator<<(std::ostream &os, const sketch &sk) {
     return os;
 }
 
-bool sketch::__isPrime(uint n) const {
+bool sketch::__isPrime(uint32_t n) const {
     if (n <= 1) return false;
     else if (n <= 3) return true;
         else if ((n % 2) == 0 or (n % 3) == 0) return false;
-    uint i = 5;
+    uint32_t i = 5;
     while (i * i <= n) {
         if (n % i == 0 or n % (i + 2) == 0) return false;
         i = i + 6;
@@ -91,9 +91,9 @@ bool sketch::__isPrime(uint n) const {
     return true;
 }
 
-bool sketch::__doesTheKeyExceedsTheGivenThresholdOnAllBuckets(key &k, uint threshold) {
-    for (uint row = 0; row < this->d; row++) {
-        uint col = this->__hashKey(this->hash_func.at(row).first,
+bool sketch::__doesTheKeyExceedsTheGivenThresholdOnAllBuckets(key &k, uint32_t threshold) {
+    for (uint32_t row = 0; row < this->d; row++) {
+        uint32_t col = this->__hashKey(this->hash_func.at(row).first,
                                    this->hash_func.at(row).second, k);
         if (this->matrix->at(this->__index(row,col)).estimateElementFrequency(k).second < threshold) {
             return false;
@@ -102,17 +102,17 @@ bool sketch::__doesTheKeyExceedsTheGivenThresholdOnAllBuckets(key &k, uint thres
     return true;
 }
 
-bool sketch::__doesTheDifferenceBetweenFrequencyEstimationForTheKeyExceedsTheGivenThresholdOnAllBuckets(key &k, sketch sk, uint threshold) {
+bool sketch::__doesTheDifferenceBetweenFrequencyEstimationForTheKeyExceedsTheGivenThresholdOnAllBuckets(key &k, sketch sk, uint32_t threshold) {
     estimation_t e1, e2;
 
-    for (uint row = 0; row < this->d; row++) {
-        uint col = this->__hashKey(this->hash_func.at(row).first,
+    for (uint32_t row = 0; row < this->d; row++) {
+        uint32_t col = this->__hashKey(this->hash_func.at(row).first,
                                    this->hash_func.at(row).second, k);
         // The key hashes to the same bucket on both sketches?
         e1 = this->matrix->at(this->__index(row,col)).estimateElementFrequency(k);
         e2 = sk.matrix->at(this->__index(row,col)).estimateElementFrequency(k);
 
-        uint diffBetweenSketchesForTheKey_k = std::max(e1.second - e2.first, e2.second - e1.first);
+        uint32_t diffBetweenSketchesForTheKey_k = std::max(e1.second - e2.first, e2.second - e1.first);
         if (diffBetweenSketchesForTheKey_k < threshold) {
             return false;
         }
@@ -120,15 +120,15 @@ bool sketch::__doesTheDifferenceBetweenFrequencyEstimationForTheKeyExceedsTheGiv
     return true;
 }
 
-uint sketch::countElements() {
-    uint elements = 0;
-    for (uint i = 0; i < this->w; i++) {
+uint32_t sketch::countElements() {
+    uint32_t elements = 0;
+    for (uint32_t i = 0; i < this->w; i++) {
         elements += this->matrix->at(i).getCounterValue();
     }
     return elements;
 }
 
-key_set_t sketch::getHeavyHitters(uint threshold) {
+key_set_t sketch::getHeavyHitters(uint32_t threshold) {
     key_set_t key_set;
     for (bucket_list_t::iterator it = this->matrix->begin(); it != this->matrix->end(); it++) {
         bucket bucket = *it;
@@ -154,11 +154,11 @@ key_set_t sketch::getHeavyHitters(uint threshold) {
 sketch::~sketch() {
 }
 
-key_set_t sketch::getHeavyChangers(sketch &sk, uint threshold) {
+key_set_t sketch::getHeavyChangers(sketch &sk, uint32_t threshold) {
     assert(this->matrix->size() == sk.matrix->size());
 
     key_set_t keysOnBucketsExceedingThreshold;
-    for (uint i = 0; i < this->matrix->size(); i++) {
+    for (uint32_t i = 0; i < this->matrix->size(); i++) {
         bucket b1 = this->matrix->at(i);
         bucket b2 = sk.matrix->at(i);
         if (b1.getCounterValue() > threshold or
@@ -193,7 +193,7 @@ void sketch::__allocSketch() {
     // bucket default constructor must initialize empty buckets
     LOG(DEBUG) << "Allocating sketch";
     this->matrix = new bucket_list_t;
-    for (uint i = 0; i < (w*d); i++) {
+    for (uint32_t i = 0; i < (w*d); i++) {
         this->matrix->push_back(bucket(max_dict_length));
     }
 }
