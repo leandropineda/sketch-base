@@ -27,7 +27,7 @@ private:
     void __buildHashFunc();
     uint32_t __hashKey(uint32_t a, uint32_t b, key &k);
     uint32_t __index(uint32_t i, uint32_t j) const;
-    bool __isPrime(uint32_t n) const; //TODO: implement and add this constrain to class constructor
+    bool __isPrime(uint32_t n) const;
     bool __doesTheKeyExceedsTheGivenThresholdOnAllBuckets(key &k, uint32_t threshold);
     bool __doesTheDifferenceBetweenFrequencyEstimationForTheKeyExceedsTheGivenThresholdOnAllBuckets(key &k, sketch sk, uint32_t threshold);
 public:
